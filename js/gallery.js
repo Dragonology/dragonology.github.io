@@ -11,6 +11,7 @@ const lightboxNext = lightbox.querySelector(".lightbox-next");
 
 const SWIPE_THRESHOLD = 50;
 const FADE_MS = 300;
+const COMPACT_WIDTH = 500;
 
 let images = [];
 let currentIndex = 0;
@@ -24,6 +25,90 @@ function altText(image) {
 
 function imageSrc(image) {
   return `images/${image.file}`;
+}
+
+function isCompactDisplay(image, naturalWidth) {
+  if (image.display === "full") {
+    return false;
+  }
+  if (image.display === "compact") {
+    return true;
+  }
+  return naturalWidth < COMPACT_WIDTH;
+}
+
+function isLargeDisplay(image, index, naturalWidth) {
+  if (image.display === "large" || image.display === "wide") {
+    return naturalWidth >= 400;
+  }
+  if (
+    image.display === "compact" ||
+    image.display === "full" ||
+    naturalWidth < 480
+  ) {
+    return false;
+  }
+  return index % 5 === 2 || index % 5 === 4 || index % 7 === 0;
+}
+
+function applyFigureSizing(img, figure, image, index) {
+  const apply = () => {
+    if (!img.naturalWidth) {
+      return;
+    }
+
+    const naturalWidth = img.naturalWidth;
+    const compact = isCompactDisplay(image, naturalWidth);
+
+    figure.dataset.naturalWidth = String(naturalWidth);
+    figure.dataset.naturalHeight = String(img.naturalHeight);
+    figure.classList.toggle("artwork--compact", compact);
+    figure.classList.toggle(
+      "artwork--large",
+      !compact && isLargeDisplay(image, index, naturalWidth)
+    );
+
+    figure.style.setProperty("--img-native-max", `${naturalWidth}px`);
+  };
+
+  if (img.complete) {
+    apply();
+  } else {
+    img.addEventListener("load", apply, { once: true });
+  }
+}
+
+function applyLightboxSizing(image) {
+  const apply = () => {
+    if (!lightboxImage.naturalWidth) {
+      return;
+    }
+
+    const compact = isCompactDisplay(image, lightboxImage.naturalWidth);
+    lightboxImage.classList.toggle("lightbox-image--compact", compact);
+
+    if (compact) {
+      const maxW = Math.min(lightboxImage.naturalWidth, window.innerWidth * 0.9);
+      const maxH = Math.min(lightboxImage.naturalHeight, window.innerHeight * 0.85);
+      lightboxImage.style.maxWidth = `${maxW}px`;
+      lightboxImage.style.maxHeight = `${maxH}px`;
+    } else {
+      lightboxImage.style.maxWidth = "";
+      lightboxImage.style.maxHeight = "";
+    }
+  };
+
+  if (lightboxImage.complete && lightboxImage.naturalWidth) {
+    apply();
+  } else {
+    lightboxImage.addEventListener("load", apply, { once: true });
+  }
+}
+
+function clearLightboxSizing() {
+  lightboxImage.classList.remove("lightbox-image--compact");
+  lightboxImage.style.maxWidth = "";
+  lightboxImage.style.maxHeight = "";
 }
 
 function observeArtwork(figure) {
@@ -55,6 +140,7 @@ function createFigure(image, index, { featured = false } = {}) {
   img.src = imageSrc(image);
   img.alt = altText(image);
   img.loading = featured ? "eager" : "lazy";
+  applyFigureSizing(img, figure, image, index);
 
   frame.appendChild(img);
   figure.appendChild(frame);
@@ -96,6 +182,12 @@ function updateCounter() {
   lightboxCounter.hidden = images.length <= 1;
 }
 
+function finishLightboxImageLoad(image) {
+  lightboxImage.classList.remove("is-fading");
+  isFading = false;
+  applyLightboxSizing(image);
+}
+
 function setLightboxImage(image, animate) {
   const src = imageSrc(image);
 
@@ -103,6 +195,7 @@ function setLightboxImage(image, animate) {
     lightboxImage.src = src;
     lightboxImage.alt = altText(image);
     lightboxImage.classList.remove("is-fading");
+    applyLightboxSizing(image);
     return;
   }
 
@@ -115,8 +208,7 @@ function setLightboxImage(image, animate) {
 
   window.setTimeout(() => {
     const onLoad = () => {
-      lightboxImage.classList.remove("is-fading");
-      isFading = false;
+      finishLightboxImageLoad(image);
       lightboxImage.removeEventListener("load", onLoad);
     };
 
@@ -158,6 +250,7 @@ function closeLightbox() {
   document.body.style.overflow = "";
   lightboxImage.classList.remove("is-fading");
   isFading = false;
+  clearLightboxSizing();
 }
 
 function showPrev() {
@@ -283,14 +376,14 @@ function initParallax() {
     if (siteHeader && headerTitle && headerOrnament) {
       const fade = Math.min(0.4, scrollY / 420);
       siteHeader.style.opacity = String(1 - fade);
-      headerTitle.style.transform = `translateY(${scrollY * 0.18}px)`;
-      headerOrnament.style.transform = `translateY(${scrollY * 0.28}px) scale(${1 - fade * 0.08})`;
+      headerTitle.style.transform = `translateY(${scrollY * 0.28}px)`;
+      headerOrnament.style.transform = `translateY(${scrollY * 0.42}px) scale(${1 - fade * 0.08})`;
     }
 
     if (heroFrame) {
       const dist = parallaxOffset(hero, viewHeight);
-      heroFrame.style.setProperty("--parallax-x", `${dist * 10}px`);
-      heroFrame.style.setProperty("--parallax-y", `${dist * 28 + scrollY * 0.04}px`);
+      heroFrame.style.setProperty("--parallax-x", `${dist * 18}px`);
+      heroFrame.style.setProperty("--parallax-y", `${dist * 44 + scrollY * 0.07}px`);
     }
 
     gallery.querySelectorAll(".artwork").forEach((figure) => {
@@ -302,8 +395,8 @@ function initParallax() {
       const depth = Number(figure.dataset.parallaxDepth || 1);
       const side = figure.dataset.parallaxSide === "left" ? -1 : 1;
       const dist = parallaxOffset(figure, viewHeight);
-      const x = side * dist * (6 + depth * 2);
-      const y = dist * (10 + depth * 4);
+      const x = side * dist * (11 + depth * 4);
+      const y = dist * (18 + depth * 6);
 
       frame.style.setProperty("--parallax-x", `${x}px`);
       frame.style.setProperty("--parallax-y", `${y}px`);

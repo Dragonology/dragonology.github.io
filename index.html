@@ -13,11 +13,26 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="preload" href="images/Picture1.jpg" as="image">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    try {
+      var savedTheme = localStorage.getItem("dragonology-theme");
+      if (savedTheme) {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
+  <div class="theme-toggle" role="group" aria-label="Color theme preview">
+    <span class="theme-toggle-label">Theme</span>
+    <button type="button" class="theme-toggle-btn is-active" data-theme-choice="classic" aria-pressed="true">Classic</button>
+    <button type="button" class="theme-toggle-btn" data-theme-choice="vivid" aria-pressed="false">Vivid</button>
+    <button type="button" class="theme-toggle-btn" data-theme-choice="colorful" aria-pressed="false">Colorful</button>
+  </div>
+
   <header class="site-header">
     <h1 class="header-title">Adventures in Dragonology</h1>
     <div class="header-ornament" aria-hidden="true">
@@ -55,6 +70,7 @@
     </div>
   </div>
 
+  <script src="js/theme.js"></script>
   <script src="js/gallery.js"></script>
 </body>
 </html>
