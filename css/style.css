@@ -27,6 +27,23 @@ body {
   color: var(--ink);
   line-height: 1.5;
   min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 header {
@@ -55,10 +72,6 @@ header h1 {
   padding: 0 1.5rem;
 }
 
-.hero .artwork {
-  animation-delay: 0s;
-}
-
 .gallery {
   display: flex;
   flex-direction: column;
@@ -70,37 +83,45 @@ header h1 {
 
 .artwork {
   opacity: 0;
-  transform: translateY(12px);
-  animation: fadeUp 0.7s ease forwards;
+  transform: translateY(28px);
+  transition: opacity 0.85s ease, transform 0.85s ease;
 }
 
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.artwork.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 figure.artwork {
   cursor: zoom-in;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .artwork-frame {
+  width: 100%;
   background: #fff;
-  padding: 1rem;
-  border: 1px solid rgba(44, 36, 22, 0.08);
+  padding: 0.85rem;
+  border: 1px solid rgba(44, 36, 22, 0.18);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 4px 20px var(--shadow);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+    inset 0 0 0 1px rgba(44, 36, 22, 0.1),
+    inset 0 0 0 5px #fff,
+    inset 0 0 0 6px rgba(44, 36, 22, 0.07),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 4px 22px var(--shadow);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
 }
 
 figure.artwork:hover .artwork-frame,
 figure.artwork:focus-within .artwork-frame {
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 8px 28px var(--shadow-deep);
+    inset 0 0 0 1px rgba(44, 36, 22, 0.14),
+    inset 0 0 0 5px #fff,
+    inset 0 0 0 6px rgba(44, 36, 22, 0.09),
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 10px 32px var(--shadow-deep);
   transform: translateY(-2px);
 }
 
@@ -137,15 +158,34 @@ figure.artwork:focus-within figcaption {
   transform: translateX(-50%) translateY(0);
 }
 
-.hero figure.artwork {
-  cursor: zoom-in;
-}
-
 .gallery-empty {
   text-align: center;
   padding: 3rem 1rem;
   color: var(--ink-muted);
   font-style: italic;
+}
+
+.site-footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  border-top: 1px solid rgba(44, 36, 22, 0.1);
+}
+
+.site-footer p + p {
+  margin-top: 0.35rem;
+}
+
+.site-footer-brand {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  opacity: 0.7;
 }
 
 /* Lightbox */
@@ -164,23 +204,45 @@ figure.artwork:focus-within figcaption {
   display: none;
 }
 
-.lightbox-figure {
+.lightbox-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
   max-width: min(960px, 100%);
-  max-height: 90vh;
+  touch-action: pan-y pinch-zoom;
+}
+
+.lightbox-counter {
+  color: #c9bfb0;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lightbox-figure {
+  max-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  margin: 0;
 }
 
 .lightbox-image {
   max-width: 100%;
-  max-height: calc(90vh - 3rem);
+  max-height: calc(85vh - 4rem);
   width: auto;
   height: auto;
   object-fit: contain;
   background: #fff;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.lightbox-image.is-fading {
+  opacity: 0;
 }
 
 .lightbox-caption {
@@ -232,6 +294,27 @@ figure.artwork:focus-within figcaption {
   right: 0.5rem;
 }
 
+@media (max-width: 768px) {
+  figure.artwork figcaption {
+    position: static;
+    transform: none;
+    opacity: 1;
+    margin-top: 0.85rem;
+    padding: 0;
+    background: transparent;
+    color: var(--ink-muted);
+    text-align: center;
+    pointer-events: auto;
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  figure.artwork:hover figcaption,
+  figure.artwork:focus-within figcaption {
+    transform: none;
+  }
+}
+
 @media (max-width: 600px) {
   .lightbox-prev,
   .lightbox-next {
@@ -240,5 +323,9 @@ figure.artwork:focus-within figcaption {
 
   figure.artwork figcaption {
     font-size: 0.85rem;
+  }
+
+  .lightbox {
+    padding: 1.25rem;
   }
 }

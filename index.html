@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Adventures in Dragonology</title>
   <meta name="description" content="Illustrations from Adventures in Dragonology">
+  <meta name="copyright" content="© 2026 Adventures in Dragonology. All rights reserved.">
   <meta property="og:title" content="Adventures in Dragonology">
   <meta property="og:description" content="Illustrations from Adventures in Dragonology">
   <meta property="og:type" content="website">
@@ -25,14 +26,23 @@
   <section id="hero" class="hero" hidden></section>
   <main id="gallery" class="gallery" aria-live="polite"></main>
 
+  <footer class="site-footer">
+    <p>&copy; 2026 Adventures in Dragonology. All rights reserved.</p>
+    <p>All illustrations are proprietary. Not for reproduction or reuse without permission.</p>
+    <p class="site-footer-brand">Adventures in Dragonology&trade;</p>
+  </footer>
+
   <div id="lightbox" class="lightbox" hidden aria-hidden="true">
     <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
     <button type="button" class="lightbox-prev" aria-label="Previous image">&lsaquo;</button>
     <button type="button" class="lightbox-next" aria-label="Next image">&rsaquo;</button>
-    <figure class="lightbox-figure">
-      <img class="lightbox-image" src="" alt="">
-      <figcaption class="lightbox-caption"></figcaption>
-    </figure>
+    <div class="lightbox-stage">
+      <p class="lightbox-counter" aria-live="polite"></p>
+      <figure class="lightbox-figure">
+        <img class="lightbox-image" src="" alt="">
+        <figcaption class="lightbox-caption"></figcaption>
+      </figure>
+    </div>
   </div>
 
   <script src="js/gallery.js"></script>
