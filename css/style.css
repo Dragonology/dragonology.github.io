@@ -119,13 +119,10 @@ body > * {
 
 /* Theme toggle */
 .theme-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 50;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  margin: 1.5rem auto 0;
   padding: 0.35rem;
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(44, 36, 22, 0.12);
@@ -718,11 +715,9 @@ figure.artwork:focus-within figcaption {
 
 @media (max-width: 768px) {
   .theme-toggle {
-    top: auto;
-    bottom: 1rem;
-    right: 1rem;
-    left: 1rem;
+    flex-wrap: wrap;
     justify-content: center;
+    max-width: 100%;
   }
 
   [data-theme="vivid"] .gallery,

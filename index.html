@@ -19,20 +19,13 @@
   <script>
     try {
       var savedTheme = localStorage.getItem("dragonology-theme");
-      if (savedTheme) {
-        document.documentElement.setAttribute("data-theme", savedTheme);
-      }
-    } catch (e) {}
+      document.documentElement.setAttribute("data-theme", savedTheme || "colorful");
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "colorful");
+    }
   </script>
 </head>
 <body>
-  <div class="theme-toggle" role="group" aria-label="Color theme preview">
-    <span class="theme-toggle-label">Theme</span>
-    <button type="button" class="theme-toggle-btn is-active" data-theme-choice="classic" aria-pressed="true">Classic</button>
-    <button type="button" class="theme-toggle-btn" data-theme-choice="vivid" aria-pressed="false">Vivid</button>
-    <button type="button" class="theme-toggle-btn" data-theme-choice="colorful" aria-pressed="false">Colorful</button>
-  </div>
-
   <header class="site-header">
     <h1 class="header-title">Adventures in Dragonology</h1>
     <div class="header-ornament" aria-hidden="true">
@@ -55,6 +48,12 @@
     <p>&copy; 2026 Adventures in Dragonology. All rights reserved.</p>
     <p>All illustrations are proprietary. Not for reproduction or reuse without permission.</p>
     <p class="site-footer-brand">Adventures in Dragonology&trade;</p>
+    <div class="theme-toggle" role="group" aria-label="Color theme">
+      <span class="theme-toggle-label">Theme</span>
+      <button type="button" class="theme-toggle-btn" data-theme-choice="classic" aria-pressed="false">Classic</button>
+      <button type="button" class="theme-toggle-btn" data-theme-choice="vivid" aria-pressed="false">Vivid</button>
+      <button type="button" class="theme-toggle-btn is-active" data-theme-choice="colorful" aria-pressed="true">Colorful</button>
+    </div>
   </footer>
 
   <div id="lightbox" class="lightbox" hidden aria-hidden="true">

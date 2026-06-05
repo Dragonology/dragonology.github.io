@@ -22,12 +22,12 @@ function setTheme(theme) {
 }
 
 function initTheme() {
-  let saved = "classic";
+  let saved = "colorful";
 
   try {
-    saved = localStorage.getItem(THEME_KEY) || "classic";
+    saved = localStorage.getItem(THEME_KEY) || "colorful";
   } catch {
-    saved = "classic";
+    saved = "colorful";
   }
 
   if (!toggle) {
