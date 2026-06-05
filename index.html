@@ -3,15 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dragonology</title>
+  <title>Adventures in Dragonology</title>
+  <meta name="description" content="Illustrations from Adventures in Dragonology">
+  <meta property="og:title" content="Adventures in Dragonology">
+  <meta property="og:description" content="Illustrations from Adventures in Dragonology">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="images/Picture1.jpg">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="images/Picture1.jpg" as="image">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header>
     <h1>Adventures in Dragonology</h1>
+    <div class="header-rule" aria-hidden="true"></div>
   </header>
 
+  <section id="hero" class="hero" hidden></section>
   <main id="gallery" class="gallery" aria-live="polite"></main>
+
+  <div id="lightbox" class="lightbox" hidden aria-hidden="true">
+    <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+    <button type="button" class="lightbox-prev" aria-label="Previous image">&lsaquo;</button>
+    <button type="button" class="lightbox-next" aria-label="Next image">&rsaquo;</button>
+    <figure class="lightbox-figure">
+      <img class="lightbox-image" src="" alt="">
+      <figcaption class="lightbox-caption"></figcaption>
+    </figure>
+  </div>
 
   <script src="js/gallery.js"></script>
 </body>
