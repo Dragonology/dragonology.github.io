@@ -30,20 +30,8 @@ body {
   position: relative;
 }
 
-.paper-texture {
-  position: fixed;
-  inset: -10% 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  will-change: transform;
-}
-
 body > * {
   position: relative;
-  z-index: 1;
 }
 
 .site-header {
@@ -90,21 +78,16 @@ body > * {
   will-change: transform;
 }
 
-.parallax-footer {
-  will-change: transform;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .hero .artwork-frame,
   .gallery .artwork-frame {
     transform: none;
   }
 
-  .paper-texture,
   .site-header,
   .header-title,
   .header-ornament,
-  .parallax-footer {
+  .site-footer {
     transform: none !important;
     opacity: 1 !important;
   }
@@ -212,6 +195,14 @@ figure.artwork:focus-within figcaption {
   font-size: 0.9rem;
   line-height: 1.6;
   border-top: 1px solid rgba(44, 36, 22, 0.1);
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.site-footer.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .site-footer p + p {

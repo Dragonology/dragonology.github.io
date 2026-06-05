@@ -237,16 +237,41 @@ function parallaxOffset(element, viewHeight) {
   return (centerY - viewHeight / 2) / viewHeight;
 }
 
+function initFooterReveal() {
+  const footer = document.querySelector(".site-footer");
+  if (!footer) {
+    return;
+  }
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    footer.classList.add("is-visible");
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.25, rootMargin: "0px 0px -10% 0px" }
+  );
+
+  observer.observe(footer);
+}
+
 function initParallax() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    initFooterReveal();
     return;
   }
 
   const siteHeader = document.querySelector(".site-header");
   const headerTitle = document.querySelector(".header-title");
   const headerOrnament = document.querySelector(".header-ornament");
-  const paperTexture = document.querySelector(".paper-texture");
-  const footer = document.querySelector(".parallax-footer");
   const heroFrame = hero.querySelector(".artwork-frame");
 
   let ticking = false;
@@ -254,10 +279,6 @@ function initParallax() {
   const updateParallax = () => {
     const scrollY = window.scrollY;
     const viewHeight = window.innerHeight;
-
-    if (paperTexture) {
-      paperTexture.style.transform = `translateY(${scrollY * 0.12}px)`;
-    }
 
     if (siteHeader && headerTitle && headerOrnament) {
       const fade = Math.min(0.4, scrollY / 420);
@@ -287,11 +308,6 @@ function initParallax() {
       frame.style.setProperty("--parallax-x", `${x}px`);
       frame.style.setProperty("--parallax-y", `${y}px`);
     });
-
-    if (footer) {
-      const dist = parallaxOffset(footer, viewHeight);
-      footer.style.transform = `translateY(${dist * -14}px)`;
-    }
   };
 
   const onScroll = () => {
@@ -308,6 +324,7 @@ function initParallax() {
   updateParallax();
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
+  initFooterReveal();
 }
 
 fetch("images.json")
