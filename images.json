@@ -1,1 +1,12 @@
-[]
+[
+  { "file": "Picture1.jpg", "caption": "Cover page" },
+  { "file": "Picture1.png", "caption": "A pile of books" },
+  { "file": "Picture2.png", "caption": "A dragon's eggs" },
+  { "file": "Picture3.png", "caption": "Reference material" },
+  { "file": "Picture4.png", "caption": "Manual" },
+  { "file": "Picture5.png", "caption": "Pyramid" },
+  { "file": "Picture6.png", "caption": "Needs" },
+  { "file": "Picture7.png", "caption": "Food" },
+  { "file": "Picture8.png", "caption": "Levels" },
+  { "file": "Picture9.png", "caption": "Notes" }
+]
