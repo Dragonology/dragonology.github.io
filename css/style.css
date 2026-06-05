@@ -30,15 +30,15 @@ body {
   position: relative;
 }
 
-body::before {
-  content: "";
+.paper-texture {
   position: fixed;
-  inset: 0;
+  inset: -10% 0;
   pointer-events: none;
   z-index: 0;
   opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
+  will-change: transform;
 }
 
 body > * {
@@ -46,30 +46,68 @@ body > * {
   z-index: 1;
 }
 
-header {
+.site-header {
   text-align: center;
   padding: 3rem 1.5rem 2rem;
+  will-change: transform, opacity;
 }
 
-header h1 {
+.header-title {
   font-size: clamp(2rem, 6vw, 3.25rem);
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: none;
+  will-change: transform;
 }
 
-.header-rule {
-  width: 4rem;
-  height: 1px;
-  background: var(--ink-muted);
-  margin: 1.25rem auto 0;
-  opacity: 0.45;
+.header-ornament {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem auto 0;
+  color: var(--ink-muted);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.header-ornament-svg {
+  width: min(14rem, 70vw);
+  height: auto;
 }
 
 .hero {
   max-width: var(--max-width);
   margin: 0 auto 3rem;
   padding: 0 1.5rem;
+}
+
+.hero .artwork-frame {
+  transform: translate(var(--parallax-x, 0), var(--parallax-y, 0));
+  will-change: transform;
+}
+
+.gallery .artwork-frame {
+  transform: translate(var(--parallax-x, 0), var(--parallax-y, 0));
+  will-change: transform;
+}
+
+.parallax-footer {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .artwork-frame,
+  .gallery .artwork-frame {
+    transform: none;
+  }
+
+  .paper-texture,
+  .site-header,
+  .header-title,
+  .header-ornament,
+  .parallax-footer {
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 .gallery {
@@ -111,7 +149,7 @@ figure.artwork {
     inset 0 0 0 6px rgba(44, 36, 22, 0.07),
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
     0 4px 22px var(--shadow);
-  transition: box-shadow 0.35s ease, transform 0.35s ease;
+  transition: box-shadow 0.35s ease;
 }
 
 figure.artwork:hover .artwork-frame,
@@ -122,7 +160,7 @@ figure.artwork:focus-within .artwork-frame {
     inset 0 0 0 6px rgba(44, 36, 22, 0.09),
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
     0 10px 32px var(--shadow-deep);
-  transform: translateY(-2px);
+  transform: translate(var(--parallax-x, 0), calc(var(--parallax-y, 0) - 2px));
 }
 
 .artwork img {

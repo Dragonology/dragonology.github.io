@@ -18,15 +18,27 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
-    <h1>Adventures in Dragonology</h1>
-    <div class="header-rule" aria-hidden="true"></div>
+  <div class="paper-texture" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <h1 class="header-title">Adventures in Dragonology</h1>
+    <div class="header-ornament" aria-hidden="true">
+      <svg class="header-ornament-svg" viewBox="0 0 240 28" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 14 H78 M162 14 H240" fill="none" stroke="currentColor" stroke-width="0.75"/>
+        <path d="M78 14 C88 14 92 8 100 8 C108 8 112 14 120 14 C128 14 132 8 140 8 C148 8 152 14 162 14" fill="none" stroke="currentColor" stroke-width="0.75"/>
+        <path d="M88 14 C90 18 94 20 100 22 C106 20 110 18 112 14" fill="none" stroke="currentColor" stroke-width="0.6"/>
+        <path d="M128 14 C130 18 134 20 140 22 C146 20 150 18 152 14" fill="none" stroke="currentColor" stroke-width="0.6"/>
+        <circle cx="120" cy="14" r="2.25" fill="currentColor"/>
+        <path d="M120 6 L122 10 L120 14 L118 10 Z" fill="currentColor" opacity="0.85"/>
+        <path d="M120 22 L122 18 L120 14 L118 18 Z" fill="currentColor" opacity="0.85"/>
+      </svg>
+    </div>
   </header>
 
   <section id="hero" class="hero" hidden></section>
   <main id="gallery" class="gallery" aria-live="polite"></main>
 
-  <footer class="site-footer">
+  <footer class="site-footer parallax-footer">
     <p>&copy; 2026 Adventures in Dragonology. All rights reserved.</p>
     <p>All illustrations are proprietary. Not for reproduction or reuse without permission.</p>
     <p class="site-footer-brand">Adventures in Dragonology&trade;</p>

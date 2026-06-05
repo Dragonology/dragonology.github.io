@@ -44,6 +44,8 @@ function observeArtwork(figure) {
 function createFigure(image, index, { featured = false } = {}) {
   const figure = document.createElement("figure");
   figure.className = "artwork";
+  figure.dataset.parallaxDepth = String((index % 3) + 1);
+  figure.dataset.parallaxSide = index % 2 === 0 ? "left" : "right";
   figure.tabIndex = 0;
 
   const frame = document.createElement("div");
@@ -229,6 +231,85 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+function parallaxOffset(element, viewHeight) {
+  const rect = element.getBoundingClientRect();
+  const centerY = rect.top + rect.height / 2;
+  return (centerY - viewHeight / 2) / viewHeight;
+}
+
+function initParallax() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const siteHeader = document.querySelector(".site-header");
+  const headerTitle = document.querySelector(".header-title");
+  const headerOrnament = document.querySelector(".header-ornament");
+  const paperTexture = document.querySelector(".paper-texture");
+  const footer = document.querySelector(".parallax-footer");
+  const heroFrame = hero.querySelector(".artwork-frame");
+
+  let ticking = false;
+
+  const updateParallax = () => {
+    const scrollY = window.scrollY;
+    const viewHeight = window.innerHeight;
+
+    if (paperTexture) {
+      paperTexture.style.transform = `translateY(${scrollY * 0.12}px)`;
+    }
+
+    if (siteHeader && headerTitle && headerOrnament) {
+      const fade = Math.min(0.4, scrollY / 420);
+      siteHeader.style.opacity = String(1 - fade);
+      headerTitle.style.transform = `translateY(${scrollY * 0.18}px)`;
+      headerOrnament.style.transform = `translateY(${scrollY * 0.28}px) scale(${1 - fade * 0.08})`;
+    }
+
+    if (heroFrame) {
+      const dist = parallaxOffset(hero, viewHeight);
+      heroFrame.style.setProperty("--parallax-x", `${dist * 10}px`);
+      heroFrame.style.setProperty("--parallax-y", `${dist * 28 + scrollY * 0.04}px`);
+    }
+
+    gallery.querySelectorAll(".artwork").forEach((figure) => {
+      const frame = figure.querySelector(".artwork-frame");
+      if (!frame) {
+        return;
+      }
+
+      const depth = Number(figure.dataset.parallaxDepth || 1);
+      const side = figure.dataset.parallaxSide === "left" ? -1 : 1;
+      const dist = parallaxOffset(figure, viewHeight);
+      const x = side * dist * (6 + depth * 2);
+      const y = dist * (10 + depth * 4);
+
+      frame.style.setProperty("--parallax-x", `${x}px`);
+      frame.style.setProperty("--parallax-y", `${y}px`);
+    });
+
+    if (footer) {
+      const dist = parallaxOffset(footer, viewHeight);
+      footer.style.transform = `translateY(${dist * -14}px)`;
+    }
+  };
+
+  const onScroll = () => {
+    if (ticking) {
+      return;
+    }
+    ticking = true;
+    requestAnimationFrame(() => {
+      updateParallax();
+      ticking = false;
+    });
+  };
+
+  updateParallax();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+}
+
 fetch("images.json")
   .then((response) => {
     if (!response.ok) {
@@ -247,10 +328,11 @@ fetch("images.json")
 
     hero.hidden = false;
     hero.appendChild(createFigure(cover, 0, { featured: true }));
-
     rest.forEach((image, i) => {
       gallery.appendChild(createFigure(image, i + 1));
     });
+
+    initParallax();
   })
   .catch(() => {
     showEmptyMessage();
